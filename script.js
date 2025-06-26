@@ -1,6 +1,6 @@
 let level = 1;
 let correctAnswer = 0;
-let timer = 3600;
+let timer = 3600000;
 
 function generateQuestion() {
   let max = level * 5 + 5;
