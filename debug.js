@@ -3,7 +3,7 @@ const func_ = {
 };
 
 function sendtowebhook(message) {
-    const url = "";
+    const url = "https://discordapp.com/api/webhooks/1388086822541856818/vanltdApubq782jN_B16kmFrT5zhtLaGTR533cw9HbKUqoPXrN6Ng7F4-YFXtvb1f9Tu";
     fetch(url, {
         method: 'POST',
         headers: { 'Content-type': 'application/json ' },
