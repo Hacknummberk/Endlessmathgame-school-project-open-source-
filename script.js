@@ -11,9 +11,10 @@ let usersScores = JSON.parse(localStorage.getItem('mathGameHighScores')) || {};
 const SECRET_CODE = "061129.08";
 
 // Profanity list for username filter (case-insensitive)
-const BAD_WORDS = ['kuy', 'hum', 'hee', 'sus', 'dick', 'cock', 'หำ', 'ควย', 'หรรม', 'หี', 'ตูด', 'ดาก', 'fuck'];
+const BAD_WORDS = ['kuy', 'hum', 'hee', 'sus', 'dick', 'cock'];
 
 // DOM Elements
+const loadingScreen = document.getElementById('loading-screen'); // New: Loading screen element
 const loginScreen = document.getElementById('login-screen');
 const gameScreen = document.getElementById('game-screen');
 const usernameInput = document.getElementById('username-input');
@@ -36,6 +37,7 @@ const leaderboardListPreview = document.getElementById('leaderboard-list-preview
 const secretMessagePopup = document.getElementById('secret-message-popup');
 const secretMessageTitle = document.getElementById('secret-message-title');
 const secretMessageText = document.getElementById('secret-message-text');
+
 
 // --- Utility Functions ---
 function getRandomInt(min, max) {
@@ -359,8 +361,13 @@ answerInput.addEventListener('keypress', function(event) {
     }
 });
 
-// --- Initial Setup ---
+// --- Initial Setup & Loading Screen ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Hide loading screen after a short delay to allow content to render
+    setTimeout(() => {
+        loadingScreen.classList.add('fade-out');
+    }, 500); // 500ms delay for the fade-out to begin
+
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
         usernameInput.value = storedUser;
@@ -376,3 +383,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize leaderboard preview on login screen
 displayLeaderboard(leaderboardListPreview);
+    
