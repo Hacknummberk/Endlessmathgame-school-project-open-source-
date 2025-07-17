@@ -3,40 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Endless Math Game</title>
+  <title>Cute Minimal Math Game</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;700&family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
-    <h1>🧠 เกมคิดเลขไม่สิ้นสุด</h1>
-    <div class="info">
-      <div>เลเวล: <span id="level">1</span></div>
-      <div>⏱ <span id="timer">1:00:00</span></div>
+    <h1 class="game-title">✨ Math Fun! ✨</h1>
+
+    <div id="login-screen" class="screen active">
+      <h2>ยินดีต้อนรับนักคณิตศาสตร์!</h2>
+      <input type="text" id="username-input" placeholder="ใส่ชื่อของคุณ" class="cute-input">
+      <button onclick="loginUser()" class="cute-button">🚀 เริ่มการผจญภัย</button>
+      <div id="leaderboard-preview" class="leaderboard-preview">
+        <h3>ผู้ผจญภัยยอดเยี่ยม</h3>
+        <ul id="leaderboard-list-preview">
+          </ul>
+      </div>
     </div>
-    <div id="question">กำลังสร้างโจทย์...</div>
-    <input type="number" id="answer" placeholder="ตอบให้ไว!" />
-    <br>
-    <button onclick="checkAnswer()">ส่งคำตอบ</button>
-    <div id="status"></div>
-    <button onclick="document.getElementById('howto').style.display='block'">📘 วิธีเล่น</button>
-    <div id="howto" style="display:none; margin-top: 1rem; text-align:left; font-size: 0.9rem;">
-      <strong>วิธีเล่น:</strong><br>
-      - เกมนี้จะสร้างโจทย์เลขอัตโนมัติตามเลเวลที่เพิ่มขึ้น<br>
-      - ผู้เล่นมีเวลา 10 นาทีในการตอบโจทย์ให้ได้มากที่สุด<br>
-      - กด 'ส่งคำตอบ' เพื่อเช็คคำตอบ<br>
-      - เกมจะจบเมื่อเวลาหมด หรือ ตอบผิด<br>
-      <br>
-      <strong>เครดิต:</strong><br>
-      1. กฤติพงษ์ หอมพันนา ม.3/2 เลขที่ 1 (ผู้เขียนโปรแกรม)<br>
-      2. รัชพล คัมภิรานนท์ ม.3/2 เลขที่ 9 (ผู้หาข้อมูล)<br>
-      3. ชัยมงคล ยันเสนา ม.3/2 เลขที่ 2 (ผู้ช่วยผู้หาข้อมูล)<br>
-      <strong>ข้อมูล :</strong><br>
-      1. เป็นตัว open source<br>
-      <br>
+
+    <div id="game-screen" class="screen">
+      <div class="info-bar">
+        <div class="info-item">ผู้เล่น: <span id="current-player">แขก</span></div>
+        <div class="info-item">เลเวล: <span id="level">1</span></div>
+        <div class="info-item">คะแนน: <span id="score">0</span></div>
+        <div class="info-item">เวลา: <span id="timer">10:00</span></div>
+      </div>
+      <div id="question" class="question-animation">กำลังสร้างโจทย์...</div>
+      <input type="text" id="answer" placeholder="พิมพ์คำตอบของคุณ" class="cute-input" />
+      <button onclick="checkAnswer()" class="cute-button submit-button">✅ ส่งคำตอบ</button>
+      <div id="status" class="status-message"></div>
+      <div class="game-actions">
+        <button onclick="toggleHowTo()" class="cute-button">📚 วิธีเล่น</button>
+        <button onclick="showLeaderboard()" class="cute-button">🏆 ตารางคะแนน</button>
+      </div>
+      <div id="howto" class="how-to-play">
+        <strong>วิธีเล่น:</strong><br>
+        - ตอบโจทย์คณิตศาสตร์เพื่อเพิ่มเลเวลและคะแนน<br>
+        - คุณมีเวลา 10 นาที หากตอบผิดหรือหมดเวลา เกมจะจบลง<br>
+        - **ประเภทของโจทย์:**<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;+ การบวก (เช่น $5 + 3$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;- การลบ (เช่น $10 - 4$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;* การคูณ (เช่น $6 \times 7$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;/ การหาร (เช่น $12 \div 4$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;sin ค่าไซน์ของมุมในหน่วยองศา (เช่น $sin(30^\circ)$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;cos ค่าโคไซน์ของมุมในหน่วยองศา (เช่น $cos(60^\circ)$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;√ รากที่สอง (เช่น $\sqrt{25}$)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;กำลัง (เช่น $2^3$ คือ $2$ ยกกำลัง $3$)<br>
+        <br>
+        <strong>ผู้พัฒนา:</strong><br>
+        - กฤติพงศ์ : ม.3/2 : เลขที่ 1 (ผู้เขียนสคริปต์และออกแบบ)<br>
+        - รัชพล : ม.3/2 : เลขที่ 9 (ผู้หาข้อมูล)<br>
+        - ชัยมงคล : ม.3/2 : เลขที่ 2 (ผู้ช่วยผู้หาข้อมูล)<br>
+      </div>
     </div>
+
+    <div id="wrong-answer-popup" class="popup">
+      <div class="popup-content wrong-popup">
+        <h2>โอ๊ะโอ! ตอบผิด! 😵</h2>
+        <p>คำตอบที่ถูกต้อง คือ: <span id="correct-answer-display"></span></p>
+        <div class="popup-buttons">
+          <button onclick="retryGame()" class="cute-button retry-button">🔄 ลองอีกครั้ง</button>
+          <button onclick="showLeaderboard()" class="cute-button check-score-button">📊 ดูคะแนน</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="leaderboard-popup" class="popup">
+      <div class="popup-content leaderboard-popup-content">
+        <h2>🏆 ผู้ผจญภัยยอดเยี่ยม!</h2>
+        <ul id="leaderboard-list">
+          </ul>
+        <button onclick="hideLeaderboard()" class="cute-button close-button">✖ ปิด</button>
+      </div>
+    </div>
+
+    <div id="secret-message-popup" class="popup">
+        <div class="popup-content secret-popup">
+            <h2 id="secret-message-title"></h2>
+            <p id="secret-message-text"></p>
+            <button onclick="hideSecretMessagePopup()" class="cute-button close-button">รับทราบ!</button>
+        </div>
+    </div>
+
   </div>
+
   <script src="script.js"></script>
-  <script src="debug.js"></script>
-  <script src="info.js"></script>
 </body>
 </html>
