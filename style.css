@@ -1,79 +1,429 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mitr:wght@400;700&family=Quicksand:wght@400;700&display=swap');
+
+:root {
+    /* Color Palette for Cute Minimal */
+    --primary-bg: #fdf6e3; /* Soft cream */
+    --container-bg: #ffffff; /* Pure white */
+    --text-color: #3f51b5; /* Deep blue, not too dark */
+    --accent-color: #ff9800; /* Vibrant orange */
+    --button-bg: #ffc107; /* Brighter yellow/orange */
+    --button-hover-bg: #ffa000; /* Darker orange on hover */
+    --correct-color: #4caf50; /* Green */
+    --wrong-color: #f44336; /* Red */
+    --shadow-color: rgba(0, 0, 0, 0.08); /* Soft shadow */
+    --shadow-hover-color: rgba(0, 0, 0, 0.15); /* Slightly darker shadow */
+
+    /* Border Radius */
+    --border-radius-main: 25px; /* More rounded for cute look */
+    --border-radius-elements: 12px; /* Rounded buttons/inputs */
+
+    /* Animation durations */
+    --animation-speed-fast: 0.2s;
+    --animation-speed-normal: 0.4s;
+    --animation-speed-slow: 0.6s;
+}
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  font-family: 'Kanit', sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  margin: 0;
+    font-family: 'Mitr', sans-serif; /* Thai font for general text */
+    background: linear-gradient(135deg, var(--primary-bg), #ffe0b2); /* Soft gradient */
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    line-height: 1.6;
+    background-size: 200% 200%;
+    animation: gradientBackground 15s ease infinite alternate; /* Gentle background animation */
+}
+
+@keyframes gradientBackground {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
 }
 
 .container {
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0, 255, 200, 0.5);
-  text-align: center;
-  width: 90%;
-  max-width: 400px;
+    background-color: var(--container-bg);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-main);
+    box-shadow: 0 10px 30px var(--shadow-color);
+    text-align: center;
+    width: 95%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+    transition: transform var(--animation-speed-normal) ease-out, box-shadow var(--animation-speed-normal) ease-out;
 }
 
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+.container:hover {
+    transform: translateY(-5px); /* Subtle lift on hover */
+    box-shadow: 0 15px 40px var(--shadow-hover-color);
 }
 
+.game-title {
+    font-family: 'Quicksand', sans-serif; /* Playful font for titles */
+    font-size: 2.5rem;
+    color: var(--accent-color);
+    margin-bottom: 2.5rem;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+}
+
+/* Screens management */
+.screen {
+    display: none;
+    animation: fadeIn var(--animation-speed-normal) ease-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* Info Bar */
+.info-bar {
+    display: grid; /* Use grid for better layout control */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 15px; /* Space between info items */
+    margin-bottom: 1.5rem;
+}
+
+.info-item {
+    background-color: #e3f2fd; /* Light blue background */
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius-elements);
+    font-weight: bold;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.info-item span {
+    color: var(--accent-color); /* Accent for dynamic numbers */
+    font-weight: 700;
+}
+
+/* Question Styling */
 #question {
-  font-size: 1.8rem;
-  margin: 1.5rem 0;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2.8rem;
+    margin: 2.5rem 0;
+    min-height: 3rem;
+    color: var(--text-color);
+    font-weight: 700;
+    transition: color var(--animation-speed-fast) ease-in-out;
 }
 
-input[type=number] {
-  width: 80%;
-  padding: 10px;
-  font-size: 1.2rem;
-  border-radius: 8px;
-  border: none;
-  outline: none;
+/* Input Fields */
+.cute-input {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.3rem;
+    border-radius: var(--border-radius-elements);
+    border: 2px solid #b3e5fc; /* Soft blue border */
+    outline: none;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    transition: border-color var(--animation-speed-fast) ease, box-shadow var(--animation-speed-fast) ease;
+    background-color: #fcfcfc;
 }
 
-button {
-  margin-top: 1rem;
-  padding: 10px 20px;
-  font-size: 1.2rem;
-  background-color: #00e6ac;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: black;
-  font-weight: bold;
-  transition: 0.3s;
+.cute-input::placeholder {
+    color: #a7d9f8; /* Lighter placeholder text */
 }
 
-button:hover {
-  background-color: #00b58d;
+.cute-input:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px rgba(255, 152, 0, 0.2); /* Orange glow on focus */
 }
 
+/* Buttons */
+.cute-button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    background-color: var(--button-bg);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-elements);
+    cursor: pointer;
+    font-weight: 700;
+    transition: background-color var(--animation-speed-fast) ease, transform var(--animation-speed-fast) ease, box-shadow var(--animation-speed-fast) ease;
+    box-shadow: 0 5px 15px var(--shadow-color);
+    margin: 0.7rem 0.7rem;
+    display: inline-flex; /* For icon + text alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+.cute-button:hover {
+    background-color: var(--button-hover-bg);
+    transform: translateY(-3px); /* More pronounced lift */
+    box-shadow: 0 8px 20px var(--shadow-hover-color);
+}
+
+.cute-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.cute-button:disabled {
+    background-color: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+    opacity: 0.8;
+    transform: none;
+    box-shadow: none;
+}
+
+.submit-button {
+    background-color: var(--correct-color); /* Green submit button */
+}
+.submit-button:hover {
+    background-color: #388e3c;
+}
+
+
+.game-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Status Message */
 #status {
-  font-size: 1.2rem;
-  margin-top: 1rem;
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    min-height: 1.5rem;
+    font-weight: bold;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity var(--animation-speed-normal) ease-out, transform var(--animation-speed-normal) ease-out;
 }
 
-.info {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1rem;
-  margin-top: 1rem;
+#status.show-status {
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.info span {
-  font-weight: bold;
+.status-correct {
+    color: var(--correct-color);
 }
+
+.status-wrong {
+    color: var(--wrong-color);
+}
+
+/* How To Play section */
+.how-to-play {
+    background-color: #fff8e1; /* Lighter cream background */
+    padding: 1.5rem;
+    border-radius: var(--border-radius-elements);
+    margin-top: 2rem;
+    color: #6d4c41; /* Softer brown text */
+    text-align: left;
+    max-height: 0;
+    opacity: 0;
+    overflow-y: auto; /* Allows vertical scrolling if content exceeds max-height */
+    transition: max-height var(--animation-speed-slow) ease-out, opacity var(--animation-speed-slow) ease-out, padding var(--animation-speed-slow) ease-out;
+}
+
+.how-to-play.show-howto {
+    max-height: 400px; /* Needs to be large enough to contain content */
+    opacity: 1;
+    padding: 1.5rem;
+}
+
+/* Popups */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Softer overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--animation-speed-normal) ease, visibility var(--animation-speed-normal) ease;
+}
+
+.popup.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.popup-content {
+    background-color: var(--container-bg);
+    padding: 3rem; /* More generous padding */
+    border-radius: var(--border-radius-main);
+    box-shadow: 0 15px 40px var(--shadow-hover-color);
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    transform: scale(0.7); /* Smaller initial scale for more "pop" */
+    opacity: 0;
+    transition: transform var(--animation-speed-normal) cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity var(--animation-speed-normal) ease; /* Bounce effect */
+}
+
+.popup.active .popup-content {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.popup-content h2 {
+    font-family: 'Quicksand', sans-serif;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.popup-content p {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    color: #555;
+}
+
+#correct-answer-display {
+    font-weight: bold;
+    color: var(--accent-color);
+    font-size: 1.6em; /* Larger correct answer */
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.wrong-popup h2 {
+    color: var(--wrong-color); /* Red for wrong answer title */
+}
+
+.retry-button {
+    background-color: var(--correct-color);
+}
+.retry-button:hover {
+    background-color: #388e3c;
+}
+
+.check-score-button {
+    background-color: #9e9e9e; /* Grey button */
+}
+.check-score-button:hover {
+    background-color: #757575;
+}
+
+.close-button {
+    margin-top: 1.5rem;
+    background-color: #9e9e9e;
+}
+.close-button:hover {
+    background-color: #757575;
+}
+
+/* Leaderboard Specifics */
+.leaderboard-preview, .leaderboard-popup-content {
+    margin-top: 2rem;
+    background-color: #e0f2f7; /* Light blueish for leaderboard */
+    border-radius: var(--border-radius-elements);
+    padding: 1.5rem;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.leaderboard-preview h3, .leaderboard-popup-content h2 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+#leaderboard-list, #leaderboard-list-preview {
+    list-style: none;
+    padding: 0;
+    max-height: 200px; /* Keep height for scrolling */
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+}
+
+#leaderboard-list li, #leaderboard-list-preview li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0.5rem;
+    border-bottom: 1px dashed #bbdefb; /* Dashed line for cuteness */
+    font-size: 1.2rem;
+    color: #555;
+}
+
+#leaderboard-list li:last-child, #leaderboard-list-preview li:last-child {
+    border-bottom: none;
+}
+
+#leaderboard-list li span:first-child, #leaderboard-list-preview li span:first-child {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+/* Secret Message Popup */
+.secret-popup h2 {
+    color: var(--accent-color); /* Orange for secret message title */
+}
+.secret-popup p {
+    color: #6d4c41; /* Softer text color */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.question-animation {
+    animation: fadeIn var(--animation-speed-normal) ease-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 1.5rem;
+    }
+    .game-title {
+        font-size: 2rem;
+    }
+    #question {
+        font-size: 2.2rem;
+    }
+    .info-item {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
+    }
+    .cute-input {
+        font-size: 1.1rem;
+        padding: 12px 15px;
+    }
+    .cute-button {
+        font-size: 1rem;
+        padding: 12px 25px;
+        margin: 0.5rem 0.5rem;
+    }
+    .popup-content {
+        padding: 2rem;
+    }
+    .popup-content h2 {
+        font-size: 1.8rem;
+    }
+    .popup-content p {
+        font-size: 1.2rem;
+    }
+  }
+  
