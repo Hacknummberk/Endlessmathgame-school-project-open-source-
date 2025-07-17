@@ -38,7 +38,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    overflow: hidden;
+    /* overflow: hidden; Removed from body to allow loading screen to cover everything */
     line-height: 1.6;
     background-size: 200% 200%;
     animation: gradientBackground 15s ease infinite alternate; /* Gentle background animation */
@@ -48,6 +48,50 @@ body {
     0% { background-position: 0% 50%; }
     100% { background-position: 100% 50%; }
 }
+
+/* --- Loading Screen Styles --- */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary-bg); /* Match body background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Ensure it's on top */
+    transition: opacity var(--animation-speed-slow) ease-out, visibility var(--animation-speed-slow) ease-out;
+}
+
+#loading-screen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader {
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid var(--accent-color); /* Accent color */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loading-screen p {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    font-weight: bold;
+}
+/* --- End Loading Screen Styles --- */
+
 
 .container {
     background-color: var(--container-bg);
@@ -425,5 +469,4 @@ body {
     .popup-content p {
         font-size: 1.2rem;
     }
-  }
-  
+}
