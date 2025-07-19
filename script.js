@@ -1,21 +1,16 @@
-// Game State Variables
+
 let level = 1;
 let score = 0;
 let correctAnswer = 0;
-let timer = 600; // 10 minutes in seconds
-let countdownInterval;
+let timer = 600; let countdownInterval;
 let currentPlayer = "Guest";
 let usersScores = JSON.parse(localStorage.getItem('mathGameHighScores')) || {};
 
-// Secret code
 const SECRET_CODE = "061129.08";
 
-// Profanity list for username filter (case-insensitive)
 const BAD_WORDS = ['kuy', 'hum', 'hee', 'sus', 'dick', 'cock'];
 
-// DOM Elements
-const loadingScreen = document.getElementById('loading-screen'); // New: Loading screen element
-const loginScreen = document.getElementById('login-screen');
+const loadingScreen = document.getElementById('loading-screen'); const loginScreen = document.getElementById('login-screen');
 const gameScreen = document.getElementById('game-screen');
 const usernameInput = document.getElementById('username-input');
 const currentPlayerSpan = document.getElementById('current-player');
@@ -25,8 +20,7 @@ const timerSpan = document.getElementById('timer');
 const questionElement = document.getElementById('question');
 const answerInput = document.getElementById('answer');
 const statusDiv = document.getElementById('status');
-const submitButton = document.querySelector('.submit-button'); // Use specific class
-const howToDiv = document.getElementById('howto');
+const submitButton = document.querySelector('.submit-button'); const howToDiv = document.getElementById('howto');
 
 const wrongAnswerPopup = document.getElementById('wrong-answer-popup');
 const correctAnswerDisplay = document.getElementById('correct-answer-display');
@@ -39,7 +33,6 @@ const secretMessageTitle = document.getElementById('secret-message-title');
 const secretMessageText = document.getElementById('secret-message-text');
 
 
-// --- Utility Functions ---
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -51,29 +44,21 @@ function roundToDecimal(num, decimalPlaces) {
     return Math.round(num * factor) / factor;
 }
 
-// --- Login & Score Management ---
 function loginUser() {
     const username = usernameInput.value.trim();
 
-    // --- Profanity Filter Check ---
-    const lowerCaseUsername = username.toLowerCase();
+        const lowerCaseUsername = username.toLowerCase();
     if (BAD_WORDS.some(word => lowerCaseUsername.includes(word))) {
         alert("ไม่เอาคำไม่ดี (Don't use bad words)");
-        usernameInput.value = ''; // Reset input
-        usernameInput.focus();
-        return; // Stop the function here
-    }
-    // --- End Profanity Filter ---
-
+        usernameInput.value = '';         usernameInput.focus();
+        return;     }
+    
     if (username) {
         currentPlayer = username;
         currentPlayerSpan.innerText = currentPlayer;
-        localStorage.setItem('currentUser', currentPlayer); // Store current user for persistence
-        
-        // Initialize score if new user, otherwise load existing high score
-        if (!usersScores[currentPlayer]) {
-            usersScores[currentPlayer] = 0; // New user starts with 0 high score
-            saveScores();
+        localStorage.setItem('currentUser', currentPlayer);         
+                if (!usersScores[currentPlayer]) {
+            usersScores[currentPlayer] = 0;             saveScores();
         }
         
         showGameScreen();
@@ -92,18 +77,15 @@ function saveScores() {
 function updateScore(points) {
     score += points;
     scoreSpan.innerText = score;
-    // Update high score for current player if exceeded
-    if (score > usersScores[currentPlayer]) {
+        if (score > usersScores[currentPlayer]) {
         usersScores[currentPlayer] = score;
         saveScores();
     }
 }
 
 function displayLeaderboard(listElement) {
-    listElement.innerHTML = ''; // Clear existing list
-    const sortedScores = Object.entries(usersScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
-    const topScores = sortedScores.slice(0, 10); // Display top 10
-
+    listElement.innerHTML = '';     const sortedScores = Object.entries(usersScores).sort(([, scoreA], [, scoreB]) => scoreB - scoreA);
+    const topScores = sortedScores.slice(0, 10); 
     if (topScores.length === 0) {
         listElement.innerHTML = '<li>No scores yet. Be the first!</li>';
         return;
@@ -118,24 +100,20 @@ function displayLeaderboard(listElement) {
 
 function showLeaderboard() {
     displayLeaderboard(leaderboardList);
-    hideWrongAnswerPopup(); // Ensure wrong answer popup is hidden
-    hideSecretMessagePopup(); // Ensure secret message popup is hidden
-    leaderboardPopup.classList.add('active');
+    hideWrongAnswerPopup();     hideSecretMessagePopup();     leaderboardPopup.classList.add('active');
 }
 
 function hideLeaderboard() {
     leaderboardPopup.classList.remove('active');
 }
 
-// --- Screen Management ---
 function showLoginScreen() {
     loginScreen.classList.add('active');
     gameScreen.classList.remove('active');
     wrongAnswerPopup.classList.remove('active');
     leaderboardPopup.classList.remove('active');
     secretMessagePopup.classList.remove('active');
-    displayLeaderboard(leaderboardListPreview); // Show preview on login screen
-}
+    displayLeaderboard(leaderboardListPreview); }
 
 function showGameScreen() {
     loginScreen.classList.remove('active');
@@ -143,15 +121,11 @@ function showGameScreen() {
     answerInput.focus();
 }
 
-// --- Game Logic ---
 function generateQuestion() {
-    // Re-trigger question animation
-    questionElement.classList.remove('question-animation');
-    void questionElement.offsetWidth; // Trigger reflow
-    questionElement.classList.add('question-animation');
+        questionElement.classList.remove('question-animation');
+    void questionElement.offsetWidth;     questionElement.classList.add('question-animation');
 
-    let maxNum = level * 3 + 7; // Basic max for simple ops
-    let opList = ['+', '-', '*', '/', 'sin', 'cos', 'sqrt', 'pow'];
+    let maxNum = level * 3 + 7;     let opList = ['+', '-', '*', '/', 'sin', 'cos', 'sqrt', 'pow'];
     let op = opList[Math.floor(Math.random() * opList.length)];
 
     let a, b, questionText;
@@ -159,62 +133,40 @@ function generateQuestion() {
     switch (op) {
         case 'sin':
         case 'cos':
-            // Generate angles across the full 360 degrees for variety.
-            // Result will be rounded to 2 decimal places.
-            let angle = getRandomInt(0, 360);
+                                    let angle = getRandomInt(0, 360);
             let angleRadians = angle * (Math.PI / 180);
             if (op === 'sin') {
                 correctAnswer = Math.sin(angleRadians);
-            } else { // cos
-                correctAnswer = Math.cos(angleRadians);
+            } else {                 correctAnswer = Math.cos(angleRadians);
             }
             questionText = `${op}(${angle}°) = ?`;
             correctAnswer = roundToDecimal(correctAnswer, 2);
             break;
         case 'sqrt':
-            // Increase max for sqrt up to a reasonable limit (e.g., 900 for sqrt(900)=30)
-            a = getRandomInt(1, Math.min(level * 15 + 50, 900));
+                        a = getRandomInt(1, Math.min(level * 15 + 50, 900));
             correctAnswer = Math.sqrt(a);
             questionText = `√${a} = ?`;
             correctAnswer = roundToDecimal(correctAnswer, 2);
             break;
         case 'pow':
-            // Increase complexity for power problems:
-            // Base can go up to 12. Exponent up to 5.
-            // Ensure results don't exceed a reasonable max (e.g., 100,000 to prevent overflow/too large numbers)
-            let baseMax = Math.min(level + 7, 12); // Base up to 12
-            let expMax = Math.min(Math.floor(level / 2) + 2, 5); // Exponent up to 5
-
+                                                let baseMax = Math.min(level + 7, 12);             let expMax = Math.min(Math.floor(level / 2) + 2, 5); 
             a = getRandomInt(2, baseMax);
             b = getRandomInt(2, expMax);
             
-            // Prevent excessively large numbers for higher levels (e.g., 12^5 is already big)
-            // Limit to values that won't result in numbers over, say, 1,000,000 for quick calculation.
-            // This is a rough heuristic. Adjust as needed.
-            if (a > 6 && b > 3 && level < 15) { // If base and exp are somewhat large, and level isn't super high, reduce.
-                a = getRandomInt(2, 6);
+                                                if (a > 6 && b > 3 && level < 15) {                 a = getRandomInt(2, 6);
                 b = getRandomInt(2, 3);
             }
 
             correctAnswer = Math.pow(a, b);
-            // If correctAnswer is extremely large, re-generate.
-            if (correctAnswer > 1000000 || !Number.isFinite(correctAnswer)) { // Cap at 1 million, or if it becomes infinity
-                console.warn("Generated too large power, regenerating...");
-                generateQuestion(); // Recursive call to get a new question
-                return; // Exit this call
-            }
+                        if (correctAnswer > 1000000 || !Number.isFinite(correctAnswer)) {                 console.warn("Generated too large power, regenerating...");
+                generateQuestion();                 return;             }
 
-            questionText = `${a}<sup>${b}</sup> = ?`; // HTML for superscript
-            break;
-        default: // +, -, *, /
-            // Max number can increase more significantly
-            maxNum = level * 10 + 10;
+            questionText = `${a}<sup>${b}</sup> = ?`;             break;
+        default:                         maxNum = level * 10 + 10;
             a = getRandomInt(1, maxNum);
             b = getRandomInt(1, maxNum);
             if (op === '/') {
-                // Ensure 'a' is a multiple of 'b' for cleaner division results
-                // Or allow floats and round them
-                const multiple = getRandomInt(1, Math.floor(maxNum / b) || 1);
+                                                const multiple = getRandomInt(1, Math.floor(maxNum / b) || 1);
                 a = b * multiple;
             }
             switch (op) {
@@ -224,8 +176,7 @@ function generateQuestion() {
                 case '/': correctAnswer = a / b; break;
             }
             questionText = `${a} ${op} ${b} = ?`;
-            correctAnswer = roundToDecimal(correctAnswer, 2); // Round for division, just in case
-            break;
+            correctAnswer = roundToDecimal(correctAnswer, 2);             break;
     }
 
     questionElement.innerHTML = questionText;
@@ -237,15 +188,10 @@ function generateQuestion() {
 function checkAnswer() {
     const inputVal = answerInput.value.trim();
 
-    // --- Secret Code Check ---
-    if (inputVal === SECRET_CODE) {
-        clearInterval(countdownInterval); // Pause game
-        submitButton.disabled = true; // Disable submit button
-        showSecretMessage();
-        return; // Exit function, don't treat as a regular answer
-    }
-    // --- End Secret Code Check ---
-
+        if (inputVal === SECRET_CODE) {
+        clearInterval(countdownInterval);         submitButton.disabled = true;         showSecretMessage();
+        return;     }
+    
     const input = parseFloat(inputVal);
 
     if (isNaN(input)) {
@@ -256,8 +202,7 @@ function checkAnswer() {
 
     if (Math.abs(input - correctAnswer) < 0.01) {
         level++;
-        updateScore(1); // Increment score for correct answer
-        levelSpan.innerText = level;
+        updateScore(1);         levelSpan.innerText = level;
         statusDiv.innerText = "✅ Correct! Keep going!";
         statusDiv.classList.remove('status-wrong');
         statusDiv.classList.add('status-correct', 'show-status');
@@ -269,8 +214,7 @@ function checkAnswer() {
         correctAnswerDisplay.innerText = correctAnswer;
         wrongAnswerPopup.classList.add('active');
 
-        // Update high score if current score is higher
-        if (score > usersScores[currentPlayer]) {
+                if (score > usersScores[currentPlayer]) {
             usersScores[currentPlayer] = score;
             saveScores();
         }
@@ -278,8 +222,7 @@ function checkAnswer() {
 }
 
 function retryGame() {
-    // Reset game state
-    level = 1;
+        level = 1;
     score = 0;
     timer = 600;
 
@@ -298,29 +241,21 @@ function hideWrongAnswerPopup() {
     wrongAnswerPopup.classList.remove('active');
 }
 
-// --- Secret Message Logic ---
 function showSecretMessage() {
     if (score >= 5) {
         secretMessageTitle.innerText = "Wow! You're Smart! 😉";
-        secretMessageText.innerText = "อิจฉาคนฉลาดอะ"; // Envy smart people
-    } else {
+        secretMessageText.innerText = "อิจฉาคนฉลาดอะ";     } else {
         secretMessageTitle.innerText = "Keep Practicing! 👍";
-        secretMessageText.innerText = "สู้ไปน้องเดะก็ฉลาดเอง"; // Fight on, little one, you'll be smart too
-    }
+        secretMessageText.innerText = "สู้ไปน้องเดะก็ฉลาดเอง";     }
     secretMessagePopup.classList.add('active');
 }
 
 function hideSecretMessagePopup() {
     secretMessagePopup.classList.remove('active');
-    // After secret message, resume game if it was active
-    if (timer > 0 && !submitButton.disabled) { // Only if game wasn't over
-        startTimer(); // Resume timer
-        answerInput.focus(); // Re-focus input
-    }
+        if (timer > 0 && !submitButton.disabled) {         startTimer();         answerInput.focus();     }
 }
 
 
-// --- Timer Functionality ---
 function startTimer() {
     clearInterval(countdownInterval);
     countdownInterval = setInterval(() => {
@@ -339,8 +274,7 @@ function startTimer() {
             correctAnswerDisplay.innerText = correctAnswer;
             wrongAnswerPopup.classList.add('active');
             
-            // Update high score even if time runs out
-            if (score > usersScores[currentPlayer]) {
+                        if (score > usersScores[currentPlayer]) {
                 usersScores[currentPlayer] = score;
                 saveScores();
             }
@@ -348,12 +282,10 @@ function startTimer() {
     }, 1000);
 }
 
-// --- How To Play Toggle ---
 function toggleHowTo() {
     howToDiv.classList.toggle('show-howto');
 }
 
-// --- Event Listeners ---
 answerInput.addEventListener('keypress', function(event) {
     if (event.key === 'Enter' && !submitButton.disabled) {
         event.preventDefault();
@@ -361,13 +293,10 @@ answerInput.addEventListener('keypress', function(event) {
     }
 });
 
-// --- Initial Setup & Loading Screen ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Hide loading screen after a short delay to allow content to render
-    setTimeout(() => {
+        setTimeout(() => {
         loadingScreen.classList.add('fade-out');
-    }, 500); // 500ms delay for the fade-out to begin
-
+    }, 500); 
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
         usernameInput.value = storedUser;
@@ -381,6 +310,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Initialize leaderboard preview on login screen
 displayLeaderboard(leaderboardListPreview);
     
