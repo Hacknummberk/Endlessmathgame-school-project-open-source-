@@ -1,1 +1,1 @@
-console.log("Open source by kittipong")
+alert("Open source by kittipong");
